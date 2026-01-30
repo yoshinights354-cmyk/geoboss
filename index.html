@@ -1,64 +1,91 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NovaGames | Unblocked Gaming Hub</title>
+  
+  <!-- Font & Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    
+    :root {
+      --bg-color: #020617;
+      --card-bg: rgba(15, 23, 42, 0.8);
+      --accent: #4f46e5;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #0f172a;
+      background-color: var(--bg-color);
       color: #f8fafc;
+      overflow-x: hidden;
     }
+
     .glass-card {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
-    ::-webkit-scrollbar {
-      width: 8px;
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { 
+      background: #334155; 
+      border-radius: 10px;
     }
-    ::-webkit-scrollbar-track {
-      background: #1e293b;
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    ::-webkit-scrollbar-thumb {
-      background: #475569;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #64748b;
-    }
-    
-    /* Animation for the Game Cards */
-    @keyframes slideInUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    .animate-in {
-      animation: slideInUp 0.5s ease-out forwards;
-    }
-    
-    .custom-scroll::-webkit-scrollbar {
-      width: 4px;
+    .animate-in { animation: fadeIn 0.4s ease-out forwards; }
+
+    .cartridge-glow {
+      box-shadow: 0 0 20px rgba(79, 70, 229, 0.1);
     }
   </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.4",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react/": "https://esm.sh/react@^19.2.4/"
+
+  <!-- Import Map for React 19 ESM resolution -->
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@19.0.0",
+      "react/": "https://esm.sh/react@19.0.0/",
+      "react-dom": "https://esm.sh/react-dom@19.0.0",
+      "react-dom/": "https://esm.sh/react-dom@19.0.0/",
+      "react/jsx-runtime": "https://esm.sh/react@19.0.0/jsx-runtime",
+      "react-dom/client": "https://esm.sh/react-dom@19.0.0/client"
+    }
   }
-}
-</script>
+  </script>
+  
+  <!-- Babel Standalone for TSX Transpilation in Browser -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="overflow-x-hidden">
+<body>
   <div id="root"></div>
-  <!-- Entry point for the application -->
-  <script type="module" src="index.tsx"></script>
+
+  <!-- Main Entry Point: Mounts the React application -->
+  <script type="text/babel" data-presets="react,typescript" data-type="module">
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
+    import App from './App.tsx';
+
+    const rootElement = document.getElementById('root');
+    if (rootElement) {
+      const root = createRoot(rootElement);
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+    }
+  </script>
 </body>
 </html>

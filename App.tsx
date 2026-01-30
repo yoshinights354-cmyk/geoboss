@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import Layout from './components/Layout.tsx';
 import GameCard from './components/GameCard.tsx';
