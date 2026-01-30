@@ -112,16 +112,34 @@
           player.requestFullscreen().catch(() => {});
           setIsFullscreen(true);
         } else {
-          document.exitFullscreen();
+          if (document.exitFullscreen) document.exitFullscreen();
           setIsFullscreen(false);
         }
       };
 
-      const handleStrikeBypass = () => {
+      const handleForceRun = () => {
+        // "Force Run" by reloading the URL from scratch after a blank state
+        if (iframeRef.current) {
+          const currentUrl = game.url;
+          iframeRef.current.src = "about:blank";
+          setTimeout(() => {
+            if (iframeRef.current) iframeRef.current.src = currentUrl;
+          }, 100);
+        }
+      };
+
+      const handleLinewizeBypass = () => {
+        // Blob-based bypass technique often called "Strike" or "Linewize" bypass
         const content = `<!DOCTYPE html><html><head><title>${game.title}</title><style>body,html{margin:0;padding:0;height:100vh;overflow:hidden;background:#000}</style></head><body><iframe src="${game.url}" style="border:none;width:100%;height:100vh" allowfullscreen allow="autoplay; encrypted-media; fullscreen; clipboard-read; clipboard-write; gamepad"></iframe></body></html>`;
         const blob = new Blob([content], { type: 'text/html' });
         const blobUrl = URL.createObjectURL(blob);
         if (iframeRef.current) iframeRef.current.src = blobUrl;
+      };
+
+      const handleGloriaBypass = () => {
+        // Attempting to bypass by loading through a Gloria proxy prefix
+        const gloriaUrl = `https://gloria.world/load/${encodeURIComponent(game.url)}`;
+        if (iframeRef.current) iframeRef.current.src = gloriaUrl;
       };
 
       return (
@@ -129,15 +147,17 @@
           <div className="glass-card flex items-center justify-between px-4 py-3 border-b border-indigo-500/20">
             <div className="flex items-center gap-4">
               <button onClick={onClose} className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg border border-slate-800"><i className="fas fa-arrow-left"></i></button>
-              <h2 className="font-black text-lg text-white uppercase italic">{game.title}</h2>
+              <h2 className="font-black text-lg text-white uppercase italic hidden sm:block">{game.title}</h2>
             </div>
-            <div className="flex items-center gap-2">
-              <button onClick={handleStrikeBypass} className="bg-indigo-900/40 hover:bg-indigo-700 text-indigo-300 hover:text-white px-4 py-2 rounded-lg text-[10px] font-black border border-indigo-500/30">BYPASS MODE</button>
-              <button onClick={toggleFullscreen} className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-white border border-slate-800 rounded-lg"><i className={`fas ${isFullscreen ? 'fa-compress' : 'fa-expand'}`}></i></button>
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+              <button onClick={handleForceRun} className="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg text-[10px] font-black border border-slate-700 whitespace-nowrap">FORCE RUN</button>
+              <button onClick={handleLinewizeBypass} className="bg-indigo-900/40 hover:bg-indigo-700 text-indigo-300 hover:text-white px-3 py-1.5 rounded-lg text-[10px] font-black border border-indigo-500/30 whitespace-nowrap">LINEWIZE BYPASS</button>
+              <button onClick={handleGloriaBypass} className="bg-purple-900/40 hover:bg-purple-700 text-purple-300 hover:text-white px-3 py-1.5 rounded-lg text-[10px] font-black border border-purple-500/30 whitespace-nowrap">GLORIA BYPASS</button>
+              <button onClick={toggleFullscreen} className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-white border border-slate-800 rounded-lg shrink-0"><i className={`fas ${isFullscreen ? 'fa-compress' : 'fa-expand'}`}></i></button>
             </div>
           </div>
           <div id="game-container" className="flex-1 bg-black">
-            <iframe ref={iframeRef} src={game.url} title={game.title} allowFullScreen />
+            <iframe ref={iframeRef} src={game.url} title={game.title} allowFullScreen allow="autoplay; encrypted-media; fullscreen; clipboard-read; clipboard-write; gamepad" />
           </div>
         </div>
       );
